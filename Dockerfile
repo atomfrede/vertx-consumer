@@ -5,4 +5,4 @@ ADD target/vertx-consumer-0.0.1-fat.jar /
 
 CMD ["java", "-jar", "/vertx-consumer-0.0.1-fat.jar"]
 
-EXPOSE 5401
+EXPOSE 5701
