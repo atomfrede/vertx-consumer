@@ -7,6 +7,9 @@ import io.vertx.core.Vertx;
 import io.vertx.core.VertxOptions;
 import io.vertx.spi.cluster.hazelcast.HazelcastClusterManager;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
 public class Consumer extends AbstractVerticle {
 
     @Override
@@ -20,12 +23,18 @@ public class Consumer extends AbstractVerticle {
         networkConfig.setPort(5701);
         networkConfig.setPortAutoIncrement(false);
 
+        //networkConfig.setInterfaces(new InterfacesConfig().setEnabled(true).addInterface("192.168.0.111"));
+
+
         conf.setNetworkConfig(networkConfig);
         mgr.setConfig(conf);
 
         mgr.setConfig(conf);
 
-        VertxOptions options = new VertxOptions().setClusterManager(mgr);
+        VertxOptions options = new VertxOptions()
+                .setClustered(true)
+                //.setClusterHost("192.168.0.111")
+                .setClusterManager(mgr);
 
         Vertx.clusteredVertx(options, res -> {
             if (res.succeeded()) {
@@ -39,5 +48,13 @@ public class Consumer extends AbstractVerticle {
                 // failed!
             }
         });
+    }
+
+    public String getIpForHost() {
+        try {
+            return InetAddress.getByName("endor.fritz.box").getHostAddress();
+        } catch (UnknownHostException e) {
+            return null;
+        }
     }
 }
